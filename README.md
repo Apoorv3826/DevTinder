@@ -122,3 +122,18 @@ Table Definition (SQL): In SQL databases, the schema defines the structure of a 
    Model (NoSQL): In the context of ORMs like Mongoose for MongoDB, a model represents a blueprint for a document, including its structure and methods.
 
 ORM (SQL): In SQL databases, ORMs like Sequelize or Entity Framework create models that map to tables. These models define the structure and behavior of the data, allowing developers to interact with the database using object-oriented code.
+
+# Validation and Encryption:
+
+- for validation of our Email and Knowing that our password is strong or not. we will use a middleware function.
+- which is validator, by installing npm i validator
+- we use it by require inside our file, then check by const user = validator.isEmail(Email_variable);
+
+- and for encryption we have to use Bcrypt, by npm i bcrypt.
+- we have to provide the plaintext password , and in second parmeter we have to provide the dalt number.
+  .i.e how many rounds of encryption we need to perform, the more the rounds stronger out password.
+- e.g. code :
+
+```Javascript
+const hashPassword = await bcrypt.hash(password, 10);
+```
