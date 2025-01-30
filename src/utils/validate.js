@@ -14,4 +14,12 @@ const UserValidate = (data) => {
   }
 };
 
-module.exports = UserValidate;
+const profileUpdateValidation = (req) => {
+  const isValidate = Object.keys(req.body).every((update) =>
+    ["firstName", "lastName", "age", "skills", "bio"].includes(update)
+  );
+
+  return isValidate;
+};
+
+module.exports = { UserValidate, profileUpdateValidation };

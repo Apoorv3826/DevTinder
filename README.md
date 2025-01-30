@@ -137,3 +137,63 @@ ORM (SQL): In SQL databases, ORMs like Sequelize or Entity Framework create mode
 ```Javascript
 const hashPassword = await bcrypt.hash(password, 10);
 ```
+
+**_CONCEPT OF JWT AND COOKIES_**
+
+# what jwt token is, and how it works and its relation to cookies
+
+JWT (JSON Web Token) is an open standard used to share security information between two parties—usually a client and a server. Each JWT contains encoded JSON objects, including a set of claims. JWTs are a type of token that is often used in modern web applications for user authentication and information exchange.
+
+# Use Cases for JWT
+
+- Authentication: Once the user is logged in, each subsequent request will include the JWT, allowing the user to access routes, services, and resources permitted with that token.
+
+- Information Exchange: JWTs are a good way of securely transmitting information between parties because they can be signed, meaning you can be sure the senders are who they say they are. Additionally, the structure of a JWT allows you to verify that the content hasn’t been tampered with.
+
+# Relation to Cookies
+
+Security Considerations:
+
+- XSS (Cross-Site Scripting): Storing JWTs in local storage makes them susceptible to XSS attacks, where malicious scripts can steal the token. Cookies can mitigate this risk by using the HttpOnly flag, which makes cookies inaccessible to JavaScript.
+
+- That's Why the JWT token are inserted inside the Cookie.
+
+# Session Management:
+
+- In traditional session management, the server keeps track of active sessions, typically stored in a database, and identifies users using session IDs stored in cookies.
+
+- With JWT, the session data (claims) is stored on the client side, which can reduce the server's memory load but requires careful management, such as token expiration and refresh mechanisms.
+
+# Summary
+
+- JWTs are compact, URL-safe tokens that can be used for securely transmitting information between parties.
+
+- JWTs can be stored in either local storage or cookies, each with its own security considerations.
+
+# COOKIES :
+
+- Cookies have been around much longer than JWTs and served as a fundamental part of web development for maintaining state and session information in web applications. Here’s why cookies were and are still used:
+
+# The Role of Cookies Before JWT
+
+Session Management: Web servers are stateless by nature, meaning each request is treated independently. To maintain user sessions (e.g., keeping a user logged in as they navigate between pages), cookies were used to store session IDs. The server would then associate this ID with session data stored on the server side.
+
+# Personalization:
+
+- Cookies were used to store user preferences and personalize the user experience. For example, remembering a user's language preference or items in a shopping cart.
+
+# How Cookies Work
+
+- Setting Cookies: When a user visits a website, the server can send an HTTP response with a Set-Cookie header. The browser stores this cookie and sends it back to the server with every subsequent request to the same domain.
+
+- Retrieving Cookies: On the server side, applications can read the cookies sent with each request to identify users and manage sessions accordingly.
+
+# Evolution to JWT
+
+- While cookies are still widely used and useful, JWTs offered a modern approach to some of the limitations of traditional session management:
+
+  - Client-Side Storage: JWTs allow storing more detailed session data on the client side, reducing the load on the server.
+
+  - Statelessness: With JWTs, the server doesn’t need to store session data, making it easier to scale applications horizontally.
+
+  - Flexibility: JWTs are more versatile in various contexts, such as mobile applications, single-page applications (SPAs), and APIs.
