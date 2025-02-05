@@ -4,17 +4,19 @@ const connectionRequestSchema = new mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     status: {
       type: String,
       required: true,
       enum: {
-        values: ["pending", "interested", "accepted", "rejected"],
+        values: ["ignored", "interested", "accepted", "rejected"],
         message: "{VALUE} is not supported",
       },
       default: "pending",

@@ -5,6 +5,7 @@ const express = require("express");
 
 const requestRouter = express.Router();
 
+// get all the requests received by this user.
 requestRouter.post(
   "/request/send/:status/:receiverId",
   userAuth,
@@ -14,7 +15,7 @@ requestRouter.post(
       const receiver = req.params.receiverId;
       const status = req.params.status;
 
-      const allowedStatus = ["pending", "interested"];
+      const allowedStatus = ["ignored", "interested"];
 
       if (!allowedStatus.includes(status)) {
         return res.status(400).send("Invalid status");
@@ -45,6 +46,42 @@ requestRouter.post(
       const data = await connectionRequest.save();
 
       res.json({ message: "Request sent successfully", data });
+    } catch (err) {
+      res.status(400).send(err.message);
+    }
+  }
+);
+
+// accepting or rejecting the requested sended to this user.
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
+
+      const allowedStatus = ["accepted", "rejected"];
+
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).send("Invalid status");
+      }
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        receiver: loggedInUser._id,
+        status: "interested",
+      });
+
+      if (!connectionRequest) {
+        return res.status(404).send("Connection Request not found");
+      }
+
+      connectionRequest.status = status;
+
+      const data = await connectionRequest.save();
+
+      res.json({ message: "Connection requested Accepted", data });
     } catch (err) {
       res.status(400).send(err.message);
     }
