@@ -8,7 +8,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
     const user = req.user;
     res.send(user);
   } catch (err) {
-    res.status(401).send("Unauthorized");
+    res.status(401).json({ error: "Unauthorized" });
   }
 });
 
@@ -24,11 +24,11 @@ profileRouter.patch("/profile/update", userAuth, async (req, res) => {
       user[update] = req.body[update];
     });
 
-    res
+    await user.save();
+
+    return res
       .status(200)
       .json({ message: `Profile updated for ${user.firstName}`, user });
-
-    await user.save();
   } catch (err) {
     res.status(401).send("Unauthorized");
   }

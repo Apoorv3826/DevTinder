@@ -24,10 +24,13 @@ authRouter.post("/signup", async (req, res) => {
       gender,
     });
 
-    await user.save();
-    return res.status(201).send({ message: "User created successfully", user });
+    const savedUser = await user.save();
+    const token = await jwt.sign({ _id: savedUser._id }, "Apoorv7389");
+    res.cookie("token", token);
+
+    return res.json({ message: "User Added Successfully!", data: savedUser });
   } catch (err) {
-    return res.send(err.message);
+    return res.status(400).send("Error : " + err.message);
   }
 });
 

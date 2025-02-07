@@ -5,7 +5,7 @@ const express = require("express");
 
 const requestRouter = express.Router();
 
-// get all the requests received by this user.
+// Sending Request to other Users.
 requestRouter.post(
   "/request/send/:status/:receiverId",
   userAuth,
@@ -17,15 +17,18 @@ requestRouter.post(
 
       const allowedStatus = ["ignored", "interested"];
 
+      //Filtering the valid Status
       if (!allowedStatus.includes(status)) {
         return res.status(400).send("Invalid status");
       }
 
+      // Checking if the user which we want to send request actually exists in our db or not
       const toUser = await User.findById(receiver);
       if (!toUser) {
         return res.status(404).send("User not found");
       }
 
+      // Checking if the Request to that User already Sended or not
       const existingRequest = await ConnectionRequest.findOne({
         $or: [
           { sender, receiver },
@@ -37,6 +40,7 @@ requestRouter.post(
         return res.status(400).send("Request already exists");
       }
 
+      // Making the Request
       const connectionRequest = new ConnectionRequest({
         sender,
         receiver,
@@ -52,7 +56,7 @@ requestRouter.post(
   }
 );
 
-// accepting or rejecting the requested sended to this user.
+// accepting or rejecting the requestes sended to this user by changing the status of Connection request.
 requestRouter.post(
   "/request/review/:status/:requestId",
   userAuth,

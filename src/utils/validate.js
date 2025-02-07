@@ -16,7 +16,15 @@ const UserValidate = (data) => {
 
 const profileUpdateValidation = (req) => {
   const isValidate = Object.keys(req.body).every((update) =>
-    ["firstName", "lastName", "age", "skills", "bio"].includes(update)
+    [
+      "firstName",
+      "lastName",
+      "age",
+      "gender",
+      "skills",
+      "bio",
+      "photoUrl",
+    ].includes(update)
   );
 
   return isValidate;
