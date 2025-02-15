@@ -1,0 +1,3 @@
+- Daisy UI
+- Tailwind CSS framework.
+-
