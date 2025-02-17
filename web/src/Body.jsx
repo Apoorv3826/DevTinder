@@ -14,9 +14,12 @@ const Body = () => {
   const fetchUser = async () => {
     if (user) return;
     try {
-      const res = await axios.get("http://localhost:7777/profile/view", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/profile/view`,
+        {
+          withCredentials: true,
+        }
+      );
       dispatch(addUser(res.data));
     } catch (err) {
       if (err.status === 401) {

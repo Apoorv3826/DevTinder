@@ -20,7 +20,7 @@ const EditProfile = ({ user }) => {
     setError("");
     try {
       const res = await axios.patch(
-        "http://localhost:7777/profile/update",
+        `${import.meta.env.VITE_API_BASE_URL}/profile/update`,
         {
           firstName,
           lastName,
@@ -31,8 +31,8 @@ const EditProfile = ({ user }) => {
         },
         { withCredentials: true }
       );
-
-      dispatch(addUser(res?.data?.data));
+      console.log(res.data);
+      dispatch(addUser(res?.data?.user));
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);

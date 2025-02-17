@@ -25,23 +25,29 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
+
     const connectionRequest = await ConnectionRequest.find({
       $or: [
         { sender: loggedInUser._id, status: "accepted" },
         { receiver: loggedInUser._id, status: "accepted" },
       ],
-    }).populate("sender", "firstName lastName skills bio age gender photoUrl");
+    })
+      .populate("sender", "firstName lastName skills bio age gender photoUrl")
+      .populate(
+        "receiver",
+        "firstName lastName skills bio age gender photoUrl"
+      ); // ✅ Populate receiver too
 
     const data = connectionRequest.map((row) => {
       if (row.sender._id.toString() === loggedInUser._id.toString()) {
-        return row.receiver;
+        return row.receiver; // Now receiver is fully populated
       }
-
-      return row.sender;
+      return row.sender; // Sender is also populated
     });
 
     res.json({ data });
   } catch (err) {
+    console.error("❌ Error fetching connections:", err.message);
     res.status(500).json({ message: "Internal server error" });
   }
 });

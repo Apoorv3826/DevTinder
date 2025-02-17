@@ -8,11 +8,16 @@ import { addConnection } from "./utils/ConnectionSlice";
 const Connections = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connection);
+
   const fetchConnections = async () => {
     try {
-      const res = await axios.get("http://localhost:7777/user/connections", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/user/connections`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
       dispatch(addConnection(res.data.data));
     } catch (error) {
       console.log(error.message);
@@ -21,7 +26,7 @@ const Connections = () => {
 
   useEffect(() => {
     fetchConnections();
-  }, [dispatch]); // Added dispatch to dependencies
+  }, []);
 
   if (!connections) return null;
 
@@ -41,18 +46,18 @@ const Connections = () => {
           Your Connections
         </h1>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {connections.map((connection) => {
+          {connections.map((connection, index) => {
             const { _id, firstName, lastName, photoUrl, age, gender, bio } =
               connection;
             return (
               <div
-                key={_id}
+                key={_id || `connection-${index}`}
                 className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
               >
                 <img
                   className="h-48 w-full object-cover"
                   src={photoUrl || "/placeholder.svg"}
-                  alt={`${firstName} ${lastName}`}
+                  alt="Profile"
                 />
                 <div className="p-6">
                   <div className="uppercase tracking-wide text-sm text-purple-600 font-semibold">

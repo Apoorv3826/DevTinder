@@ -9,14 +9,17 @@ const Feed = () => {
   const dispatch = useDispatch();
 
   const getFeed = async () => {
-    if (feed) return;
     try {
-      const res = await axios.get("http://localhost:7777/user/feed", {
-        withCredentials: true,
-      });
-      dispatch(addFeed(res?.data?.data));
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/user/feed`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      dispatch(addFeed(res?.data?.data || []));
     } catch (error) {
-      console.log(error.message);
+      console.error("API Fetch Error:", error.message);
     }
   };
 
@@ -24,9 +27,7 @@ const Feed = () => {
     getFeed();
   }, []);
 
-  if (!feed) return null;
-
-  if (feed.length <= 0)
+  if (!feed || feed.length === 0)
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-br from-purple-100 to-indigo-200">
         <h1 className="text-3xl font-bold text-gray-800 animate-pulse">

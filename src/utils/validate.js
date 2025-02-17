@@ -26,7 +26,6 @@ const profileUpdateValidation = (req) => {
       "photoUrl",
     ].includes(update)
   );
-
   return isValidate;
 };
 

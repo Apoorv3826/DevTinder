@@ -30,6 +30,7 @@ profileRouter.patch("/profile/update", userAuth, async (req, res) => {
       .status(200)
       .json({ message: `Profile updated for ${user.firstName}`, user });
   } catch (err) {
+    console.error("❌ Error in updating profile:", err);
     res.status(401).send("Unauthorized");
   }
 });

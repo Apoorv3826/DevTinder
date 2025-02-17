@@ -9,34 +9,40 @@ const Requests = () => {
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.requests);
 
-  const reviewRequest = async (status, _id) => {
+  const reviewRequest = async (status, requestId) => {
     try {
+      console.log(
+        `Reviewing request: Status - ${status}, Request ID - ${requestId}`
+      );
+
       await axios.post(
-        `http://localhost:7777/request/review/${status}/${_id}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/request/review/${status}/${requestId}`,
         {},
         { withCredentials: true }
       );
-      dispatch(removeRequest(_id));
+      dispatch(removeRequest(requestId));
     } catch (err) {
-      console.log(err.message);
+      console.log("Error in reviewing request:", err.message);
     }
   };
 
   const fetchRequest = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:7777/user/requests/received",
+        `${import.meta.env.VITE_API_BASE_URL}/user/requests/received`,
         { withCredentials: true }
       );
       dispatch(addRequests(res.data.data));
     } catch (err) {
-      console.log(err.message);
+      console.log("Error fetching requests:", err.message);
     }
   };
 
   useEffect(() => {
     fetchRequest();
-  }, []); //Fixed useEffect dependency
+  }, []);
 
   if (!requests) return null;
 
@@ -57,8 +63,7 @@ const Requests = () => {
         </h1>
         <div className="space-y-8">
           {requests.map((request) => {
-            const { _id, firstName, lastName, photoUrl, age, gender, bio } =
-              request.sender;
+            const { _id, sender } = request;
             return (
               <div
                 key={_id}
@@ -68,18 +73,20 @@ const Requests = () => {
                   <div className="md:flex-shrink-0">
                     <img
                       className="h-48 w-full object-cover md:w-48"
-                      src={photoUrl || "/placeholder.svg"}
-                      alt={`${firstName} ${lastName}`}
+                      src={sender.photoUrl || "/placeholder.svg"}
+                      alt={`${sender.firstName} ${sender.lastName}`}
                     />
                   </div>
                   <div className="p-8 w-full">
                     <div className="uppercase tracking-wide text-sm text-purple-600 font-semibold">
-                      {age && gender ? `${age}, ${gender}` : ""}
+                      {sender.age && sender.gender
+                        ? `${sender.age}, ${sender.gender}`
+                        : ""}
                     </div>
                     <h2 className="mt-2 text-xl font-semibold text-gray-800">
-                      {firstName} {lastName}
+                      {sender.firstName} {sender.lastName}
                     </h2>
-                    <p className="mt-3 text-gray-600">{bio}</p>
+                    <p className="mt-3 text-gray-600">{sender.bio}</p>
                     <div className="mt-6 flex justify-end space-x-4">
                       <button
                         className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors duration-300"
